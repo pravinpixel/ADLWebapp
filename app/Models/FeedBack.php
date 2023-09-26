@@ -15,6 +15,9 @@ class FeedBack extends Model
         "email",
         "location",
         "message",
-        'remark'
+        'remark',
+        "corporate_id",
+        "reg_no",
+        "branch"
     ];
 }

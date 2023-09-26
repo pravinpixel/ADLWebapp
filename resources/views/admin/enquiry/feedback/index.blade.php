@@ -17,13 +17,22 @@
             <table class="table table-bordered table-centered m-0 tr-sm table-hover" id="data-table">
                 <thead>
                     <tr>
+                        @if(request()->route()->type=='feedback')
                         <th width="10%">No</th>
-                        <th>Name</th>
+                        <th>Retain Name</th>
+                        <th>Registration number</th>
                         <th>Mobile</th>
-                        <th>Email</th>
                         <th>Page URL</th>
                         <th width="200px">Date & Time</th>
                         <th width="100px">Action</th>
+                        @else
+                        <th width="10%">No</th>
+                        <th>Name of the Organization</th>
+                        <th>B2B Corporate ID</th>
+                        <th>Page URL</th>
+                        <th width="200px">Date & Time</th>
+                        <th width="100px">Action</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -31,17 +40,17 @@
         </div>
     </div>
 @endsection
-
+@if( request()->route()->type=='feedback')
 @section('scripts')
-    <script type="text/javascript">
+ <script type="text/javascript">
         $(function() {
-
             var table = $('#data-table').DataTable({
                 lengthMenu: [
                     [10, 25, 50, -1],
                     [10, 25, 50, "All"]
                 ],
                 ajax: "{{ route('feedback.index') . '/' . request()->route()->type }}",
+                
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'id',
@@ -53,12 +62,12 @@
                         name: 'name'
                     },
                     {
-                        data: 'mobile',
-                        name: 'mobile'
+                        data: 'reg_no',
+                        name: 'reg_no'
                     },
                     {
-                        data: 'email',
-                        name: 'email'
+                        data: 'mobile',
+                        name: 'mobile'
                     },
                     {
                         data: 'page_url',
@@ -79,3 +88,49 @@
         });
     </script>
 @endsection
+@else
+@section('scripts')
+ <script type="text/javascript">
+        $(function() {
+            var table = $('#data-table').DataTable({
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                ajax: "{{ route('feedback.index') . '/' . request()->route()->type }}",
+                
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'id',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'corporate_id',
+                        name: 'corporate_id'
+                    },
+                   
+                    {
+                        data: 'page_url',
+                        name: 'page_url'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ]
+            });
+        });
+    </script>
+@endsection
+@endif

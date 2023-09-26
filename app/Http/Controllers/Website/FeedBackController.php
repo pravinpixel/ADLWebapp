@@ -25,12 +25,12 @@ class FeedBackController extends Controller
                 $qac[] = [$formatedKey => $value];
             }
         }
-        if (strstr( $request['page_url'], 'feedback-b2b')) {
+        if ($request['type']=='feedback-b2b'){
             foreach ($qa as $key => $value) {
                 $temp[] = [
-                    "question" => ucfirst(array_keys($qac[$key])[0]) . "?",
+                    "question" => ucfirst(array_keys($value)[0]) . "?",
                     "answer" => array_values($value)[0] ?? '',
-                    "comments" => array_values($qac[$key])[0] ?? '',
+                    
                 ];
             }
             return  $temp;
@@ -47,9 +47,13 @@ class FeedBackController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name'   => 'required',
-            'email'  => 'required|regex:/(.+)@(.+)\.(.+)/i',
-            'mobile' => 'required|numeric|digits:10'
+            'type'   => 'required|in:feedBack,feedback-b2b',
+            'name'   => 'required|string',
+            'reg_no'  => 'required_if:type,feedBack',
+            'branch'  => 'required_if:type,feedBack',
+            'mobile' => 'required_if:type,feedBack|numeric|digits:10',
+            'remark' => 'required|string',
+            'corporate_id' => 'required_if:type,feedback-b2b'
         ]);
         if ($validator->fails()) {
             return filedCall($validator->messages());
@@ -57,27 +61,48 @@ class FeedBackController extends Controller
         $question_answer   = $this->formatQacomments($request->all());
         $data              = new FeedBack;
         $data->name        = $request->name;
-        $data->email       = $request->email;
-        $data->mobile      = $request->mobile;
-        $data->location    = $request->location;
-        $data->message     = $request->message;
-        $data->page_url    = $request->page_url;
+        $data->type        = $request->type;
+        $data->corporate_id = $request->corporate_id ?? Null;
+        $data->reg_no       = $request->reg_no?? Null;
+        $data->branch       = $request->branch?? Null;
+        $data->email       = $request->email?? Null;
+        $data->mobile      = $request->mobile?? Null;
+        $data->location    = Null;
+        $data->remark      =$request->remark;
+        $data->message     = $request->message?? Null;
+        $data->page_url    = $request->page_url?? Null;
         $data->qa_comments = json_encode($question_answer);
         
         if ($data->save()) {
-            $details = [
+            if($request->type=='feedBack'){
+             $details = [
                 'name'            => $request->name,
                 'mobile'          => $request->mobile,
-                'email'           => $request->email,
-                'location'        => $request->location,
-                'message'         => $request->message,
+                'branch'          => $request->branch,
+                'reg_no'           => $request->reg_no,
+                'remark'         => $request->remark,
                 'date_time'       => now()->toDateString(),
                 'rating_comments' => $request->rating,
                 'page_url'        => $request->page_url,
-                'question_answer' => $question_answer
+                'question_answer' => $question_answer,
+                'type'=>'feedback'
             ];
+            }else{
+           $details = [
+                'name'            => $request->name,
+                'corporate_id'          => $request->corporate_id,
+                'remark'         => $request->remark,
+                'date_time'       => now()->toDateString(),
+                'rating_comments' => $request->rating,
+                'page_url'        => $request->page_url,
+                'question_answer' => $question_answer,
+                'type'=>'feedbackb2b'
+            ];
+
+            }
             try {
                 Mail::to(config('constant.sentMailId'))->bcc(config('constant.bccMailId'))->send(new FeedBackMail($details));
+                
             } catch (\Exception $e) {
                 $message = 'Thanks for reach us, our team will get back to you shortly. Please setup your <a href="setting/mail_setting">mail setting</a> to send mail.';
                 return response()->json(['Status' => 200, 'Errors' => false, 'Message' => $message]);

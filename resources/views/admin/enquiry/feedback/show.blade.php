@@ -33,13 +33,22 @@
                 <div class="card-body">
                     <table class="table m-0 h-100">
                         <thead>
-                            <tr><th>Question</th><th></th><th>Answer</th></tr>
+                            <tr>
+                                <th>Q.No</th>
+                                <th>Question</th>
+                                <th>Answer</th>
+                              
+                            </tr>
                         </thead>
                         @foreach (json_decode($data->qa_comments) as $key => $row)
                             <tr>
-                                <td width="25%"><strong>{{ ucfirst($row->question) }}</strong>:</td>
-                                <td width="5%" class="text-center">:</td>
-                                <td width="65%"> {{ $row->answer }}</td>
+                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $row->question }}</td>
+                                @if($key==0)
+                                <td>{{ $row->answer}}</td>
+                                @else
+                                <td>{{ $row->answer == 1 ? 'Yes' : 'No' }}</td>
+                                @endif
                             </tr>
                         @endforeach
                     </table>
@@ -57,7 +66,7 @@
                             <th>Q.No</th>
                             <th>Question</th>
                             <th>Answer</th>
-                            <th>Comment </th>
+                          
                         </tr>
                     </thead>
                     <tbody>
@@ -65,8 +74,9 @@
                             <tr>
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $row->question }}</td>
+                                
                                 <td>{{ $row->answer == 1 ? 'Yes' : 'No' }}</td>
-                                <td>{{ $row->comments ?? '-' }}</td>
+                             
                             </tr>
                         @endforeach
                     </tbody>
