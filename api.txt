@@ -1,4 +1,4 @@
-http://reports.anandlab.com/listest/labapi.asmx
+https://reports.anandlab.com/listest/labapi.asmx
 
 CorporateID: 514
 Passcode: neuberg123
