@@ -176,22 +176,37 @@
                     </div>
                 </div>
             </div>
+
             <div class="card border shadow-sm">
                 <div class="card-body">
                     <h6 class="header-title mb-3"><b>Razorpay Information</b></h6>
                     <table class="table">
                         @foreach (unserialize($order->order_response)->toArray() as $key =>  $item)
                             <tr>
+                                
                                 @if (!is_null($item) && $key !== 'notes' && $key !== 'created_at')
-                                    <th>{{ textFormat($key) }}</th>
-                                    <td>{{ $item }}</td>
+                                @if($key=='offers' && is_array($item))
+                                <th>{{ textFormat($key) }}</th>
+                                @php
+                                    $pp=[];
+                                    foreach($item as $data){
+                                    $pp[]=$data;
+                                    }
+                                   
+                                @endphp
+                                 <td>{{ implode(",",$pp) }}</td>
+                                    @else
+                                    <td>{{ $item}}</td>
+                                    @endif
                                     @elseif ($key == 'created_at')
+                                     
                                         <th>{{ textFormat($key) }}</th>
                                         <td>{{ dateFormat($item) }}</td>
                                 @endif
                             </tr>
                         @endforeach
                     </table>
+
                 </div>
             </div>
         </div>
