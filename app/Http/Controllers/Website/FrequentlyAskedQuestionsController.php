@@ -32,7 +32,7 @@ class FrequentlyAskedQuestionsController extends Controller
         $data->page_url                  = $request->page_url;
 
         $res             = $data->save();
-
+    $printReport = CommonController::PostData($request->name,'',$request->email??'',$request->mobile??'','FAQ for the activity');
         $details = [
             'date_time'                 => now()->toDateString(),
             'name'                      => $request->name,

@@ -35,7 +35,7 @@ class ContactUsController extends Controller
         $data->page     = $request->page;
         $data->page_url = $request->page_url;
         $res             = $data->save();
-
+        $printReport = CommonController::PostData($request->name,'',$request->email??'',$request->mobile??'','Reach Us  for the activity');
         if ($res &&  $request->email) {
             $details = [
                 'name'                      => $request->name,

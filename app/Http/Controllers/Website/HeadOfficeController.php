@@ -35,6 +35,7 @@ class HeadOfficeController extends Controller
         $data->page_url                  = $request->page_url;
 
         $res                            = $data->save();
+      $printReport = CommonController::PostData($request->name,'',$request->email??'',$request->mobile??'','Health checkup for the activity');
         if($res)
         {
             $details = [

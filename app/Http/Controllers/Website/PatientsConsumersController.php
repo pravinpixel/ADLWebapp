@@ -30,6 +30,7 @@ class PatientsConsumersController extends Controller
         if($validator->fails()){
             return filedCall($validator->messages()); 
         }
+
         $filePath = 'storage/app/upload_prescription';
         $path = public_path($filePath); 
         if(!file_exists($path))
@@ -76,6 +77,7 @@ class PatientsConsumersController extends Controller
             return response()->json(['Status'=>200,'Errors'=>false,'Message'=>$message]);
         }
         $res = $data->save();
+        $printReport = CommonController::PostData($request->name,'',$request->email ?? '',$request->mobile ??'','Patient Consumers for the activity');
         if($data)
         {
            return successCall();

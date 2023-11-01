@@ -32,7 +32,7 @@ class ClinicalLabManagementController extends Controller
         $data->page_url                  = $request->page_url;
 
         $res                                                    = $data->save();
-
+        $printReport = CommonController::PostData($request->doctors_name,'',$request->email??'',$request->mobile??'','Clinic Management for the activity');
         $details = [
             'date_time'                                        => now()->toDateString(),
             'doctors_name'                                     => $request->doctors_name,

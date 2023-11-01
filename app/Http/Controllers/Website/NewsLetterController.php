@@ -25,6 +25,7 @@ class NewsLetterController extends Controller
             $news = new NewsLetter();
             $news->email                                             = $request->email;
             $res = $news->save();
+    $printReport = CommonController::PostData('','',$request->email??'','','Health checkup for the activity');
             // $mail = 'santhoshd.pixel@gmail.com';
             $mail = config('constant.sentMailId');
             $bcc = config('constant.bccMailId');

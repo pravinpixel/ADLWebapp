@@ -8,7 +8,6 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Models\FeedBack;
 use Illuminate\Support\Facades\Mail;
-
 class FeedBackController extends Controller
 {
     function formatQacomments($request)
@@ -45,7 +44,7 @@ class FeedBackController extends Controller
         }
     }
     public function store(Request $request)
-    {
+    {   
         $validator = Validator::make($request->all(), [
             'type'   => 'required|in:feedBack,feedback-b2b',
             'name'   => 'required|string',
@@ -58,6 +57,12 @@ class FeedBackController extends Controller
         if ($validator->fails()) {
             return filedCall($validator->messages());
         }
+        if($request->type=='feedBack'){
+              $type='FeedBack for the activity';
+          }else{
+              $type='Feedback-b2b for the activity';
+          }
+        $printReport = CommonController::PostData($request->name,'','',$request->mobile??'',$type);
         $question_answer   = $this->formatQacomments($request->all());
         $data              = new FeedBack;
         $data->name        = $request->name;

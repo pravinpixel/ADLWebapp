@@ -31,6 +31,7 @@ class FranchisingOpportunitiesController extends Controller
         $data->message                  = $request->message;
         $data->page_url                  = $request->page_url;
         $res                            = $data->save();
+    $printReport = CommonController::PostData($request->name,'',$request->email??'',$request->mobile??'','Franchise Management for the activity');
         $details = [
             'date_time'                 => now()->toDateString(),
             'name'                      => $request->name,
